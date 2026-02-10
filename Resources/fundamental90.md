@@ -1,0 +1,28 @@
+This dataset provides quantitative model outputs for global equities, leveraging a model ensemble meta-algorithm that combines robust linear regression and a modified xgBoost classification approach. It includes a wide array of fundamental, accounting, governance, and management quality signals, as well as risk and event indicators such as bankruptcy, fraud, and executive turnover. The model is designed to predict three-month ahead stock returns and the likelihood of negative corporate events, offering daily cross-sectional scores and risk metrics. By integrating these diverse factors, the dataset enables users to identify stocks with superior governance, accounting quality, and management efficiency, as well as to anticipate adverse events, making it a powerful tool for forecasting price movements and constructing risk-aware equity portfolios.
+
+Related Research Paper in Resources folder: 
+1.@News and Social Media Emotions.pdf.
+
+Abstract:
+Emotion plays a significant role in both institutional and individual investors’ decision-making process. However, there is a lack of empirical evidence available that addresses how investors’ emotions affect commodity market returns. This study examines the short-term predictive power of media-based emotion indices on the following five days’ commodity returns. The research adopts a proprietary dataset of commodity specific market emotions, which is computed based on a comprehensive textual analysis of sources from newswires, Internet news sources, and social media. Time series econometrics models (Threshold-GARCH and VAR) are employed to analyze fourteen years (01/1998-12/2011) of daily observations of the CRB commodity market index, crude oil and gold returns, and the market-level sentiment and emotions (optimism, fear, and joy).
+
+The empirical results suggest that the commodity specific emotions (optimism, fear, and joy) have significant influence on individual commodity returns, but not on commodity market index returns. Additionally, the research findings support the short-term predictability of the commodity specific emotions on the following five days’ individual commodity returns. Compared to the previous studies of news sentiment on commodity returns (Borovkova, 2011; Borovkova and Mahakena, 2015; Smales, 2014), our research provides further evidence of the effects of news and social media based emotions (optimism, fear and joy) in the commodity market. Additionally, we propose that market emotion incorporates both a sentimental effect and appraisal effect on commodity returns. Empirical results are shown to support both the sentimental effect and appraisal effect when market sentiment is controlled in crude oil and gold spot markets.
+
+Useful datafields on BRAIN:
+Dataset: fundamental90; Data field: fnd90_game_optimism_sale; Term: optimism.
+
+2.@Firm Life Cycle, Expectation Errors and Future Stock Returns.pdf.
+
+Abstract:
+I study the return predictability of firm life cycle, originally documented by Dickinson (2011). I show that a hedge portfolio strategy going long on mature firms and short on introduction firms generates a significant hedge portfolio return of 1.29% per month in return-weighted portfolios and 0.72% in value-weighted portfolios. The returns to firm life cycle are related to investors’ and analysts’ expectation errors, are driven by market-wide investor sentiment, and are more pronounced among stocks with low institutional ownership and high idiosyncratic volatility. Quantile regressions show that introduction firms have considerably greater uncertainty and skewness in future earnings growth outcomes than mature firms, such that analysts are better able to justify optimistically biased forecasts for introduction firms compared to mature firms.
+
+Useful datafields on BRAIN:
+Dataset: fundamental90; Data field: fnd90_game_eps_sur_vol; Term: error.   
+
+3.@Earnings Volatility, Ambiguity, and Crisis-Period Stock Returns.pdf.
+
+Abstract:
+Financial crises are typically marked by substantial increases in ambiguity where prices appear to decouple from fundamentals. Consistent with ambiguity-based asset pricing theories, we find that ambiguity concerns are more severe for firms with higher pre-crisis earnings volatility, causing investors to demand a higher ambiguity premium for such firms. While there is no relation between earnings volatility and stock returns under normal conditions, there is a significant negative relation between crisis-period stock returns and prior earnings volatility. In other words, during economic turmoil, investors punish stocks whose past earnings volatility was higher despite that they do not perceive these stocks to be riskier under stable economic conditions. Our findings indicate that a firm’s past earnings volatility predicts its stock price performance during crisis periods. We also find that this relation is stronger in firms with low institutional ownership and low analyst-following, consistent with ambiguity concerns being more important for firms with a greater proportion of unsophisticated investors. Our results are robust to controlling for firm-level characteristics as well as industry-fixed effects. Our evidence suggests that earnings stability helps mitigate ambiguity-concerns during a financial crisis.
+
+Useful datafields on BRAIN:
+Dataset: fundamental90; Data field: fnd90_game_eps_vol; Term: earnings volatility.   
