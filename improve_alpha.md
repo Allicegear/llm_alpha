@@ -46,8 +46,7 @@
 
 ### 步骤1: 认证登陆
 使用authenticate工具，从配置文件读取凭据：
-- user.md
-认证后，可以保持登陆状态6小时，超时需要重新认证
+- .env文件
 
 ### 步骤2: 获取源alpha信息
 使用get_alpha_details工具，参数：alpha_id
