@@ -1,32 +1,28 @@
+# How to reduce turnover
 You can use the following targeting to create event-driven alphas and low turnover alphas.
 
-Concept:
+## Concept
 If (event) {
-Assign alpha values;
+  Assign alpha values;
 } else {
-Hold alpha values;
+  Hold alpha values;
 }
-Expression:
-
+- Expression:
 trade_when(Event_condition, Alpha_expression, -1)
 
-Pros:
+- Pros:
+ - Good alpha coverage
+ - Flexible in determining events
+ - Can be used to enhance signals by trading at the right time
+ - Low turnover and low cost alpha
 
-Good alpha coverage
-Flexible in determining events
-Can be used to enhance signals by trading at the right time
-Low turnover and low cost alpha
+- Cons:
+ - Not easy to get high Sharpe alpha
+ - Not easy to get high return alpha
 
- 
-Cons:
+- Approach
+ - Define events: Any spike in returns, data values and technical indicators can be used to define events.
+ - Alpha assignment: Look for signals that are aligned with the abnormality of an event — that is, alphas that need to be executed when such events happen.
 
-Not easy to get high Sharpe alpha
-Not easy to get high return alpha
-
-Approach:
-Define events: Any spike in returns, data values and technical indicators can be used to define events.
-Alpha assignment: Look for signals that are aligned with the abnormality of an event — that is, alphas that need to be executed when such events happen.
-
-Note:
-Hold alpha can be replaced by decaying alpha linearly or exponentially.
-Check alpha coverage to make sure events are not so rare.
+- Note:
+Hold alpha can be replaced by decaying alpha linearly or exponentially.Check alpha coverage to make sure events are not so rare.

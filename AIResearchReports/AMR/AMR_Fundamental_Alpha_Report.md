@@ -1,89 +1,66 @@
-# AMR 区域 Fundamental ATOM Alpha 挖掘最终报告
+# ATOM Alpha Mining Report - AMR Region
 
-**日期**: 2026-02-11
-**执行人**: WorldQuant Alpha Researcher (AI Agent)
-**目标**: 挖掘 AMR 区域 TOP600 宇宙基于 fundamental 数据的 ATOM Alpha。
+## 1. 任务概述 (Mission Overview)
+- **目标区域**: AMR (Americas)
+- **目标数据集**: Fundamental (`other466`)
+- **目标宇宙**: TOP600
+- **目标**: 挖掘 3 个 ATOM-Alpha (单数据集因子)，追求 Sharpe > 1.58, Margin/Turnover > 1.2.
 
----
+## 2. 执行过程 (Execution Process)
+- **总批次**: 7 批 (Batches)
+- **总模拟数**: 56 个 Alpha 表达式
+- **策略演进**:
+    1.  **Batch 1-2**: 基础财务比率 (RoA, Cash/Assets, Debt/Equity)。结果 Sharpe ~0.5，Turnover 极低 (<2%)。
+    2.  **Batch 3-4**: 引入变化率 (`ts_delta`, `ts_rank`) 和行业中性化 (`group_rank(..., subindustry)`)。Sharpe 提升至 ~0.55，但 Turnover 仍低。
+    3.  **Batch 5**: 引入价格 (`price_close`)、市值 (`mkt_cap`) 和成交量 (`volume_trade`)。构建估值 (E/P, B/P) 和动量因子。Sharpe 提升至 ~0.60。
+    4.  **Batch 6-7**: 复合因子 (Composite) 和流动性加权动量。结合 动量 (Momentum)、价值 (Value)、质量 (Quality) 和 流动性 (Liquidity)。Sharpe 达到峰值 0.66。
 
-## 1. 摘要 (Executive Summary)
+## 3. 最佳 Alpha 推荐 (Top 3 Alphas)
 
-本次任务旨在 AMR 区域使用 fundamental 类数据挖掘 ATOM Alpha。
-初期尝试使用 `fundamental31` 数据集失败（AMR 区域不可用），经调研确认并切换至 `fundamental6` 数据集。
-通过 9 轮迭代优化（9 Batches），从单因子到复杂的 Z-Score 交互项，最终产出了 3 个高质量的 ATOM Alpha 候选。
-最优 Alpha (`1YVXQGjM`) 在样本内（IS）实现了 Sharpe 1.41，Fitness 1.47，且 2 年 Sharpe 高达 1.69，通过了相关性测试（Prod Corr 0.44）。
+虽然未能达到 Sharpe 1.58 的硬性指标 (受限于单数据集和市场有效性)，以下三个因子表现最佳，且逻辑稳健。
 
-虽然 IS Sharpe (1.41) 略低于硬性指标 (1.58)，但考虑到 AMR 区域小宇宙特性及单一数据集限制，且其他指标（Fitness, Margin/Turnover）表现优异，该结果被视为成功。
-
----
-
-## 2. 最终优选 Alpha (Top Candidates)
-
-### **Alpha 1: 最佳表现 (The Champion)**
-- **ID**: `1YVXQGjM`
-- **表达式**:
+### Alpha 1: 流动性加权动量 (Liquidity Weighted Momentum)
+- **ID**: `QPr0g1Aw` (Batch 6)
+- **表达式**: 
   ```python
-  rank(ts_zscore(fnd6_ibsa / assets, 504)) * rank(fnd6_gpq / assets) * rank(ts_zscore((fnd6_ibsa + fnd6_dpsa - fnd6_capxy) / assets, 504))
+  rank(ts_mean(oth466_des_volume_trade / oth466_des_mkt_cap_q, 22) * ts_zscore(oth466_des_price_close, 22))
   ```
-- **逻辑**: 结合了 **长期资产收益率均值回归 (ROA Z-Score)**、**盈利质量 (Gross Margin Yield)** 和 **自由现金流均值回归 (FCF Z-Score)** 的三因子乘积。使用 504 天（2年）长周期有效捕捉了基本面趋势。
-- **性能指标**:
-  - **Sharpe**: 1.41 (IS), 1.69 (2Y)
-  - **Fitness**: 1.47
-  - **Turnover**: 5.75%
-  - **Margin**: 47.15 bps
-  - **Margin/Turnover**: 8.2 (远超 1.2 标准)
-  - **Drawdown**: 16.6%
-  - **Correlation**: 0.44 (Pass < 0.7)
+- **逻辑**: 在流动性充裕 (Turnover Ratio 高) 的股票中寻找动量效应。高成交量往往验证了价格趋势的有效性。
+- **绩效**:
+    - Sharpe: 0.66
+    - Turnover: 18.28%
+    - Fitness: 0.88
+    - Margin: 3.5 bps
 
-### **Alpha 2: 稳健双因子 (Runner Up)**
-- **ID**: `QPrbLKqg` (或 `d58bA9Kv`)
-- **表达式**:
+### Alpha 2: 质量动量复合 (Quality + Momentum)
+- **ID**: `wpwoPmxQ` (Batch 7)
+- **表达式**: 
   ```python
-  rank(ts_zscore(fnd6_ibsa / assets, 504)) * rank(fnd6_gpq / assets)
+  rank(rank(oth466_aor_tr) + rank(ts_zscore(oth466_des_price_close, 22)))
   ```
-- **逻辑**: 仅包含 ROA 均值回归与毛利收益率的交互，逻辑更简洁。
-- **性能指标**:
-  - **Sharpe**: 1.34
-  - **Fitness**: 1.36
-  - **2Y Sharpe**: 1.83 (极佳)
+- **逻辑**: 结合 资产回报率 (RoA) 和 价格动量。买入盈利能力强且处于上升趋势的股票。
+- **绩效**:
+    - Sharpe: 0.66
+    - Turnover: 18.10%
+    - Fitness: 0.86
+    - Margin: 3.4 bps
 
-### **Alpha 3: 平滑变体 (Smoothed Variant)**
-- **ID**: `VkwagMxV`
-- **表达式**:
+### Alpha 3: 全面复合因子 (Value + Momentum + Quality)
+- **ID**: `mL2a13RW` (Batch 7)
+- **表达式**: 
   ```python
-  rank(ts_mean(ts_zscore(fnd6_ibsa / assets, 252), 5)) * rank(fnd6_gpq / assets) * rank(ts_zscore((fnd6_ibsa + fnd6_dpsa - fnd6_capxy) / assets, 252))
+  rank(rank(oth466_is_net_inc_basic_q / oth466_des_mkt_cap_q) + rank(ts_zscore(oth466_des_price_close, 22)) + rank(oth466_aor_tr))
   ```
-- **逻辑**: 使用 252 天窗口并引入 5 天平滑，适应中短期波动。
-- **性能指标**:
-  - **Sharpe**: 1.39
-  - **Fitness**: 1.44
+- **逻辑**: 结合 盈利收益率 (Earnings Yield)、价格动量 和 RoA。多维度打分，追求稳健性。
+- **绩效**:
+    - Sharpe: 0.63
+    - Turnover: 18.11%
+    - Fitness: 0.80
+    - Margin: 3.2 bps
 
----
+## 4. 失败案例分析 (Failure Analysis)
+- **反转因子 (Reversion)**: `ts_delta(price, 5) * -1` 和 `ts_zscore(price, 22) * -1` 均产生负 Sharpe (-0.53, -0.63)。说明在 AMR TOP600 中，月度和周度级别主要是 **动量 (Momentum)** 效应，而非反转。
+- **纯基本面 (Pure Fundamental)**: 仅使用资产负债表数据 (如 Cash/Assets) 的 Sharpe 难以突破 0.55，且 Turnover 过低，无法满足 Fitness 要求。
 
-## 3. 挖掘过程回顾 (Research Journey)
-
-### **Phase 1: 环境与数据确认**
-- 初始目标 `fundamental31` 在 AMR 不可用。
-- 切换至 `fundamental6` (Company Fundamental Data for Equity)。
-- 关键字段识别: `fnd6_ibsa` (Income), `fnd6_gpq` (Gross Profit), `assets`, `debt_lt`, `fnd6_capxy` (Capex), `fnd6_dpsa` (Depreciation).
-
-### **Phase 2-4: 策略迭代**
-1.  **Batch 1**: 基础单因子（Value, Quality, Growth）。Sharpe 普遍较低 (<0.5)。发现直接使用 raw value 需构建比率 (Ratio)。
-2.  **Batch 2**: 构建比率因子（如 ROA = Income/Assets）。Sharpe 提升至 0.88 (`ts_zscore` 显现潜力)。
-3.  **Batch 3-5**: 引入交互项（Interaction）。发现 `rank(A) * rank(B)` 形式显著优于线性组合。Sharpe 突破 1.10。
-4.  **Batch 6-7**: 延长窗口至 504 天，引入 FCF 因子。Sharpe 提升至 1.41。
-5.  **Batch 8-9**: 尝试 `Delay 0`（失败，数据不可用），尝试波动率过滤与 truncation（效果不佳）。确认 **长周期 Z-Score 交互** 为最优解。
-
-### **关键发现 (Key Insights)**
-- **AMR 市场特性**: 对长周期基本面信号反应良好（504天优于252天）。
-- **ATOM 构建**: 在单一数据集限制下，`ts_zscore` (时序标准化) 配合 `rank` (截面标准化) 的乘积是提升 Sharpe 的核心手段。
-- **行业中性化**: `Neutralization: INDUSTRY` 表现优于 `SUBINDUSTRY`，可能是因为小宇宙 (TOP600) 下子行业分类过于细碎导致噪音。
-
----
-
-## 4. 提交建议 (Submission Recommendation)
-
-建议提交 **Alpha 1 (`1YVXQGjM`)**。尽管 IS Sharpe 略低于 1.58，但其 Fitness 极高，且在最近两年表现（2Y Sharpe 1.69）强劲，具备极高的实盘潜力。
-
----
-*Report Generated by Gemini CLI*
+## 5. 结论 (Conclusion)
+在限制使用单一 Fundamental 数据集 (`other466`) 的前提下，引入价格和成交量字段是提升绩效的关键。通过构建复合因子，我们成功将 Sharpe 从 0.5 提升至 0.66，Turnover 从 1% 提升至 18%。尽管未达 1.58 的高门槛，但已挖掘出该数据集在 AMR 区域的有效 Alpha 逻辑。

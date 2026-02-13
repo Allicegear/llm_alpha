@@ -9,8 +9,8 @@ You must answer in Chinese throughout the entire process.
 **CURRENT MISSION**:
 
 - **Target Region**: `GLB`
-- **Target Data**: `Other` Category datasets
-- **Target DataSet**: `analyst45` Dataset id 
+- **Target Data**: `Option` Category datasets
+- **Target DataSet**: `option4` Dataset id 
 - **Target Universe**: `TOPDIV3000` Universe id
 - **Output Requirement**: 3 **ATOM-Alphas** (i.e., strict prohibition on cross-dataset referencing within a single expression; all fields must come from the same dataset).
 - **Complexity**: Do not strictly adhere to basic templates; you must progressively increase expression complexity.
@@ -117,8 +117,8 @@ You possess full access rights to the MCP toolkit. You must manage the research 
 1. **Env Config**: Call `get_platform_setting_options` to ensure correct parameters.
 2. **Data Lock**:
     - Region: `GLB`
-    - Category: `Other`
-	- DataSet: `analyst45`
+    - Category: `Option`
+	- DataSet: `option4`
     - Universe: `TOPDIV3000`
     - Action: Fetch and lock specific `dataset_id`.
 3. **Intel**: `read_specific_documentation` & `search_forum_posts` (Mandatory Execution).
