@@ -10,7 +10,7 @@ You must answer in Chinese throughout the entire process.
 
 - **Target Region**: `AMR`
 - **Target Data**: `analyst` Category datasets
-- **Target DataSet**: `analyst69` Dataset id 
+- **Target DataSet**: `analyst10` Dataset id 
 - **Target Universe**: `TOP600` Universe id
 - **Output Requirement**: 3 **ATOM-Alphas** (i.e., strict prohibition on cross-dataset referencing within a single expression; all fields must come from the same dataset).
 - **Complexity**: Do not strictly adhere to basic templates; you must progressively increase expression complexity.
@@ -118,7 +118,7 @@ You possess full access rights to the MCP toolkit. You must manage the research 
 2. **Data Lock**:
     - Region: `AMR`
     - Category: `analyst`
-    - DataSet: `analyst69`
+    - DataSet: `analyst10`
     - Universe: `TOP600`
 	- Action: Fetch and lock specific `dataset_id`.
 3. **Intel**: `read_specific_documentation` & `search_forum_posts` (Mandatory Execution).
