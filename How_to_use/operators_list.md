@@ -1,6 +1,6 @@
 # WorldQuant Brain Operators Reference (Structured)
 
-**Total Count:** 133 Operators
+**Total Count:** 140 Operators
 
 ---
 
@@ -423,7 +423,7 @@
 
 ---
 
-## 4. Cross Sectional (12)
+## 4. Cross Sectional (13)
 
 ### `generalized_rank(open, m=1)`
 - **Permission:** Genius
@@ -460,6 +460,11 @@
 - **Scope:** Combo, Regular
 - **Description:** Scales input to booksize. Ensures sum of abs(x) over all instruments equals 1 (if scale=1).
 
+### `scale_down(x,constant=0)`
+- **Permission:** Base
+- **Scope:** Combo, Regular
+- **Description:** Scales all values in each day proportionately between 0 and 1 such that minimum value maps to 0 and maximum value maps to 1. Constant is the offset by which final result is subtracted.
+
 ### `truncate(x,maxPercent=0.01)`
 - **Permission:** Genius
 - **Scope:** Combo, Regular
@@ -487,7 +492,7 @@
 
 ---
 
-## 5. Vector (7)
+## 5. Vector (11)
 
 ### `vec_avg(x)`
 - **Permission:** Base
@@ -518,6 +523,26 @@
 - **Permission:** Genius
 - **Scope:** Combo, Regular
 - **Description:** Sum of power of vector field x.
+
+### `vec_max(x)`
+- **Permission:** Genius
+- **Scope:** Combo, Regular
+- **Description:** Maximum value form vector field x.
+
+### `vec_min(x)`
+- **Permission:** Genius
+- **Scope:** Combo, Regular
+- **Description:** Minimum value form vector field x.
+
+### `vec_range(x)`
+- **Permission:** Genius
+- **Scope:** Combo, Regular
+- **Description:** Difference between maximum and minimum element in vector field x.
+
+### `vec_stddev(x)`
+- **Permission:** Genius
+- **Scope:** Combo, Regular
+- **Description:** Standard Deviation of vector field x.
 
 ### `vec_sum(x)`
 - **Permission:** Base
@@ -555,7 +580,7 @@
 
 ---
 
-## 7. Group (13)
+## 7. Group (15)
 
 ### `combo_a(alpha, nlength = 250, mode = 'algo1')`
 - **Permission:** Base
@@ -577,10 +602,20 @@
 - **Scope:** Combo, Regular
 - **Description:** Replaces NaN values by their corresponding group means.
 
+### `group_max(x, group)`
+- **Permission:** Genius
+- **Scope:** Combo, Regular
+- **Description:** Maximum of x for all instruments in the same group.
+
 ### `group_mean(x, weight, group)`
 - **Permission:** Base
 - **Scope:** Combo, Regular
 - **Description:** All elements in group equals to the mean.
+
+### `group_min(x, group)`
+- **Permission:** Genius
+- **Scope:** Combo, Regular
+- **Description:** Minimum of x for all instruments in the same group.
 
 ### `group_median(x, group)`
 - **Permission:** Genius

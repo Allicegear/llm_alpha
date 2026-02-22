@@ -315,177 +315,191 @@
 
 ## Cross Sectional Operators
 
-normalize(x, useStd = false, limit = 0.0):
-Calculates the mean value of all valid alpha values for a certain date, then subtracts that mean from each element.
-normalize(x, useStd = false, limit = 0.0).
-This operator calculates the mean value of all valid alpha values for a certain date, then subtracts that mean from each element. If useStd= true, the operator calculates the standard deviation of the resulting values and divides each normalized element by it. If limit is not equal to 0.0, operator puts the limit of the resulting alpha values (between -limit to + limit).
-Example:
-If for a certain date, instrument value of certain input x is [3,5,6,2], mean = 4 and standard deviation = 1.82.
-normalize(x, useStd = false, limit = 0.0) = [3-4,5-4,6-4,2-4] = [-1,1,2,-2].
-normalize(x, useStd = true, limit = 0.0) = [-1/1.82,1/1.82,2/1.82,-2/1.82] = [-0.55,0.55,1.1,-1.1].
+1. `normalize(x, useStd = false, limit = 0.0)`
+    - **Scope:** Combo, Regular
+    - **Description:** Calculates the mean value of all valid alpha values for a certain date, then subtracts that mean from each element.
+    - **Manual:** This operator calculates the mean value of all valid alpha values for a certain date, then subtracts that mean from each element. If useStd= true, the operator calculates the standard deviation of the resulting values and divides each normalized element by it. If limit is not equal to 0.0, operator puts the limit of the resulting alpha values (between -limit to + limit).
+        - **Example:** If for a certain date, instrument value of certain input x is [3,5,6,2], mean = 4 and standard deviation = 1.82.
+            - normalize(x, useStd = false, limit = 0.0) = [3-4,5-4,6-4,2-4] = [-1,1,2,-2]
+            - normalize(x, useStd = true, limit = 0.0) = [-1/1.82,1/1.82,2/1.82,-2/1.82] = [-0.55,0.55,1.1,-1.1]
 
-quantile(x, driver = gaussian, sigma = 1.0):
-Rank the raw vector, shift the ranked Alpha vector, apply distribution (gaussian, cauchy, uniform). If driver is uniform, it simply subtract each Alpha value with the mean of all Alpha values in the Alpha vector.
-quantile(x, driver = gaussian, sigma = 1.0).
-Rank the input raw Alpha vector.
-The ranked Alpha value would be within [0, 1].
-Shift the ranked Alpha vector.
-For every Alpha value in the ranked Alpha vector, it is shifted as: Alpha_value = 1/N + Alpha_value * (1 - 2/N), here assume there are N instruments with value in the Alpha vector. The shifted Alpha value would be within [1/N, 1-1/N].
-Apply distribution for each Alpha value in the ranked Alpha vector using the specified driver. Driver can be one of "gaussian", "uniform", "cauchy".
-Note : Sigma only affects the scale of the final value.
-This operator may help reduce outliers.
+2. `quantile(x, driver = gaussian, sigma = 1.0)`
+    - **Scope:** Combo, Regular
+    - **Description:** Rank the raw vector, shift the ranked Alpha vector, apply distribution (gaussian, cauchy, uniform). If driver is uniform, it simply subtract each Alpha value with the mean of all Alpha values in the Alpha vector.
+    - **Manual:** Rank the input raw Alpha vector. The ranked Alpha value would be within [0, 1]
+        1. Shift the ranked Alpha vector. For every Alpha value in the ranked Alpha vector, it is shifted as: Alpha_value = 1/N + Alpha_value * (1 - 2/N), here assume there are N instruments with value in the Alpha vector. The shifted Alpha value would be within [1/N, 1-1/N].
+        2. Apply distribution for each Alpha value in the ranked Alpha vector using the specified driver. Driver can be one of "gaussian", "uniform", "cauchy".
+        - **Tips:** Sigma only affects the scale of the final value. This operator may help reduce outliers.
 
-rank(x, rate=2):
-Ranks the input among all the instruments and returns an equally distributed number between 0.0 and 1.0. For precise sort, use the rate as 0.
-rank(x, rate=2).
-The Rank operator ranks the value of the input data x for the given stock among all instruments, and returns float numbers equally distributed between 0.0 and 1.0. When rate is set to 0, the sorting is done precisely. The default value of rate is 2.
-This operator may help reduce outliers and drawdown while improving the Sharpe.
-Example:
-Rank(close); Rank (close, rate=0) # Sorts precisely.
-X = (4,3,6,10,2) => Rank(x) = (0.5, 0.25, 0.75, 1, 0).
+3. `rank(x, rate=2)`
+    - **Scope:** Combo, Regular
+    - **Description:** Ranks the input among all the instruments and returns an equally distributed number between 0.0 and 1.0. For precise sort, use the rate as 0.
+    - **Manual:** The Rank operator ranks the value of the input data x for the given stock among all instruments, and returns float numbers equally distributed between 0.0 and 1.0. When rate is set to 0, the sorting is done precisely. The default value of rate is 2.
+        - **Tips:** This operator may help reduce outliers and drawdown while improving the Sharpe.
 
-scale(x, scale=1, longscale=1, shortscale=1):
-Scales input to booksize. We can also scale the long positions and short positions to separate scales by mentioning additional parameters to the operator.
-scale (x, scale=1, longscale=1, shortscale=1).
-The operator scales the input to the book size. We can optionally tune the book size by specifying the additional parameter 'scale=booksize_value'. We can also scale the long positions and short positions to separate scales by specifying additional parameters: longscale=long_booksize and shortscale=short_booksize. The default value of each leg of the scale is 0, which means no scaling, unless specified otherwise. Scale the alpha so that the sum of abs(x) over all instruments equals 1. To scale to a different book size, use Scale(x) * booksize.
-This operator may help reduce outliers.
-Please check examples for the application of the same.
-Examples:
-scale(returns, scale=4); scale (returns, scale= 1) + scale (close, scale=20); scale (returns, longscale=4, shortscale=3).
+4. `scale(x, scale=1, longscale=1, shortscale=1)`
+    - **Scope:** Combo, Regular
+    - **Description:** Scales input to booksize. We can also scale the long positions and short positions to separate scales by mentioning additional parameters to the operator.
+    - **Manual:** The operator scales the input to the book size. We can optionally tune the book size by specifying the additional parameter 'scale=booksize_value'. We can also scale the long positions and short positions to separate scales by specifying additional parameters: longscale=long_booksize and shortscale=short_booksize. The default value of each leg of the scale is 0, which means no scaling, unless specified otherwise. Scale the alpha so that the sum of abs(x) over all instruments equals 1. To scale to a different book size, use Scale(x) * booksize.
+        - **Tips:** This operator may help reduce outliers.     
 
-scale_down(x,constant=0):
-Scales all values in each day proportionately between 0 and 1 such that minimum value maps to 0 and maximum value maps to 1. Constant is the offset by which final result is subtracted.
-scale_down(x,constant=0).
-Scales all values in each day proportionately between 0 and 1 such that minimum value maps to 0 and maximum value maps to 1. constant is the offset by which final result is subtracted.
-Example:
-If for a certain date, instrument values of certain input x is [15,7,0,20], max = 20 and min = 0.
-scale_down(x,constant=0) = [(15-0)/20,(7-0)/20,(0-0)/’20,(20-0)/20] = [0.75,0.35,0,1].
-scale_down(x,constant=1) = [0.75-1,0.35-1,0-1,1-1] = [-0.25,-0.65,-1,0].
+5. `scale_down(x,constant=0)`
+    - **Scope:** Combo, Regular
+    - **Description:** Scales all values in each day proportionately between 0 and 1 such that minimum value maps to 0 and maximum value maps to 1. Constant is the offset by which final result is subtracted
+    - **Manual:** Scales all values in each day proportionately between 0 and 1 such that minimum value maps to 0 and maximum value maps to 1. constant is the offset by which final result is subtracted
+        - **Example:** If for a certain date, instrument values of certain input x is [15,7,0,20], max = 20 and min = 0.
+            - scale_down(x,constant=0) = [(15-0)/20,(7-0)/20,(0-0)/’20,(20-0)/20] = [0.75,0.35,0,1]
+            - scale_down(x,constant=1) = [0.75-1,0.35-1,0-1,1-1] = [-0.25,-0.65,-1,0]
+ 
+6. `vector_neut(x, y)`
+    - **Scope:** Combo, Regular
+    - **Description:** For given vectors x and y, it finds a new vector x* (output) such that x* is orthogonal to y.
+    - **Manual:** For given vector A (i.e., input1) and B (i.e., input2), it finds a new vector A' (i.e., output) such that A' is orthogonal to B. It calculates projection of A onto B, and then subtracts projection vector from A to find the rejection vector (i.e., A') which is perpendicular to the B.
+        - **Example:** Input: Vector of value of 3 instruments at day t, A: (1, 2, 3) and another vector of value of 3 instruments at day t, B: (3, 4, 5).
+            - Output: (-0.56, -0.08, 0.4) from (−0.56)·3 + (−0.08)·4 + 0.4·5 = 0.
+        - **Tips:** This operator may help reduce correlation, depending on the neutralization used.
 
-vector_neut(x, y):
-For given vectors x and y, it finds a new vector x* (output) such that x* is orthogonal to y.
-vector_neut(x,y).
-Input1 neutralize to input2.
-For given vector A (i.e., input1) and B (i.e., input2), it finds a new vector A' (i.e., output) such that A' is orthogonal to B. It calculates projection of A onto B, and then subtracts projection vector from A to find the rejection vector (i.e., A') which is perpendicular to the B.
-This operator may help reduce correlation, depending on the neutralization used.
-Example:
-Input: Vector of value of 3 instruments at day t, A: (1, 2, 3) and another vector of value of 3 instruments at day t, B: (3, 4, 5).
-Output: (-0.56, -0.08, 0.4) from (−0.56)·3 + (−0.08)·4 + 0.4·5 = 0.
-Show that the resulting vector is orthogonal to vector B.
+7. `winsorize(x, std=4)`
+    - **Scope:** Combo, Regular
+    - **Description:** Winsorizes x to make sure that all values in x are between the lower and upper limits, which are specified as multiple of std. Input: Value of 7 instruments at day t: (2, 4, 5, 6, 3, 8, 10), std: 1 Output: (2.81, 4, 5, 6, 3, 8, 8.03) from SD. = 2.61, mean = 5.42.
 
-winsorize(x, std=4):
-Winsorizes x to make sure that all values in x are between the lower and upper limits, which are specified as multiple of std. Input: Value of 7 instruments at day t: (2, 4, 5, 6, 3, 8, 10), std: 1 Output: (2.81, 4, 5, 6, 3, 8, 8.03) from SD. = 2.61, mean = 5.42.
+8. `zscore(x)`
+    - **Scope:** Combo, Regular
+    - **Description:** Z-score is a numerical measurement that describes a value's relationship to the mean of a group of values. Z-score is measured in terms of standard deviations from the mean.
+    - **Manual:** Z-score is a statistical tool that indicates how many standard deviations a data point lies from the average of a group of values. Essentially, it measures how unusual a data point is in relation to the mean, making it a handy tool for understanding deviation and comparison.
+        - **Example:** Input: Value of 5 instruments at day t: (100, 0, 50, 60, 25).
+            - Output: (1.57, -1.39, 0.09, 0.39, -0.65) from SD: 33.7, mean: 47.
+        - **Tips:** A Z-score tells you how many standard deviations a particular data point is from the mean. If the Z-score is positive, the data point is above the mean, and if it's negative, it's below the mean. Z-scores may be especially useful for normalizing and comparing different data fields for different stocks or different data fields. They allow researchers to calculate the probability of a score occurring within a standard normal distribution and compare two scores that are from different samples (which may have different means and standard deviations). This operator may help reduce outliers.
 
-zscore(x):
-Z-score is a numerical measurement that describes a value's relationship to the mean of a group of values. Z-score is measured in terms of standard deviations from the mean.
-Z-score is a statistical tool that indicates how many standard deviations a data point lies from the average of a group of values. Essentially, it measures how unusual a data point is in relation to the mean, making it a handy tool for understanding deviation and comparison.
-The formula to calculate a Z-score is:
-Z-score = (x-mean(x))/std(x)
-Where:
-x is an individual data point
-mean(x) is the average of the data set.
-std(x) is the standard deviation of the data set.
-By this definition, the mean of the Z-scores in a distribution is always 0, and the standard deviation is always 1.
-A Z-score tells you how many standard deviations a particular data point is from the mean. If the Z-score is positive, the data point is above the mean, and if it's negative, it's below the mean.
-Z-scores may be especially useful for normalizing and comparing different data fields for different stocks or different data fields. They allow researchers to calculate the probability of a score occurring within a standard normal distribution and compare two scores that are from different samples (which may have different means and standard deviations).
-This operator may help reduce outliers.
-Input: Value of 5 instruments at day t: (100, 0, 50, 60, 25).
-Output: (1.57, -1.39, 0.09, 0.39, -0.65) from SD: 33.7, mean: 47.
+## Vector Operators
 
-Vector operators:
+1. `vec_avg(x)`
+    - **Scope:** Combo, Regular
+    - **Description:** Taking mean of the vector field x Input: Vector of value of 1 instrument in a day: (2, 3, 5, 6, 3, 8, 10) Output: 37 / 7 = 5.29.
 
-vec_avg(x):
-Taking mean of the vector field x Input: Vector of value of 1 instrument in a day: (2, 3, 5, 6, 3, 8, 10) Output: 37 / 7 = 5.29.
+2. `vec_count(x)`
+    - **Scope:** Combo, Regular
+    - **Description:** Number of elements in vector field x.
 
-vec_max(x):
-Maximum value form vector field x.
+3. `vec_max(x)`
+    - **Scope:** Combo, Regular
+    - **Description:** Maximum value form vector field x.
 
-vec_min(x):
-Minimum value form vector field x.
+4. `vec_min(x)`
+    - **Scope:** Combo, Regular
+    - **Description:** Minimum value form vector field x.
 
-vec_sum(x):
-Sum of vector field x Input: Vector of value of 1 instrument in a day: (2, 3, 5, 6, 3, 8, 10) Output: 2 + 3 + 5 + 6 + 3 + 8 + 10 = 37.
+5. `vec_range(x)`
+    - **Scope:** Combo, Regular
+    - **Description:** Difference between maximum and minimum element in vector field x.
 
-Transformational operators:
-bucket(rank(x), range="0, 1, 0.1" or buckets = "2,5,6,7,10"):
-Convert float values into indexes for user-specified buckets. Bucket is useful for creating group values, which can be passed to GROUP as input.
-Convert float values into indexes for user-specified buckets. Bucket is useful for creating group values, which can be passed to group operators as input.
-If buckets are specified as "num_1, num_2, …, num_N", it is converted into brackets consisting of [(num_1, num_2, idx_1), (num_2, num_3, idx_2), ..., (num_N-1, num_N, idx_N-1)].
-Thus with buckets="2, 5, 6, 7, 10", the vector "-1, 3, 6, 8, 12" becomes "0, 1, 2, 4, 5".
-If range if specified as "start, end, step", it is converted into brackets consisting of [(start, start+step, idx_1), (start+step, start+2*step, idx_2), ..., (start+N*step, end, idx_N)].
-Thus with range="0.1, 1, 0.1", the vector "0.05, 0.5, 0.9" becomes "0, 4, 8".
-Note that two hidden buckets corresponding to (-inf, start] and [end, +inf) are added by default. Use the skipBegin, skipEnd parameters to remove these buckets. Use skipBoth to set both skipEnd and skipBegin to true.
-If you want to assign all NAN values into a separate group of their own, use NANGroup. The index value will be one after the last bucket.
-Examples:
-my_group = bucket(rank(volume), range="0.1,1,0.1");
-group_neutralize(sales/assets, my_group).
-my_group = bucket(rank(volume), buckets ="0.2,0.5,0.7", skipBoth=True, NANGroup=True);
-group_neutralize(sales/assets, my_group).
+6. `vec_stddev(x)`
+    - **Scope:** Combo, Regular
+    - **Description:** Standard Deviation of vector field x.
 
-trade_when(x, y, z):
-Used in order to change Alpha values only under a specified condition and to hold Alpha values in other cases. It also allows to close Alpha positions (assign NaN values) under a specified condition.
-This operator can be used to change Alpha values only under a specified condition and to retain Alpha values in other cases. It also allows for closing Alpha positions (assigning NaN values) under a specified condition.
-Trade_When (x=triggerTradeExp, y=AlphaExp, z=triggerExitExp).
-If triggerExitExp > 0, Alpha = NaN.
-Else if triggerTradeExp > 0, Alpha = AlphaExp;
-else, Alpha = previousAlpha.
-This operator may help reduce correlation and reduce turnover.
-Examples:
-Trade_When (volume >= ts_sum(volume,5)/5, rank(-returns), -1).
-If (volume >= ts_sum(volume,5)/5), Alpha = rank(-returns);
-else trade previous Alpha;
-exit condition is always false.
-Trade_When (volume >= ts_sum(volume,5)/5, rank(-returns), abs(returns) > 0.1).
-If abs(returns) > 0.1, Alpha = nan;
-else if volume >= ts_sum(volume,5)/5, Alpha = rank(-returns);
-else trade previous Alpha.
+7. `vec_sum(x)`
+    - **Scope:** Combo, Regular
+    - **Description:** Sum of vector field x Input: Vector of value of 1 instrument in a day: (2, 3, 5, 6, 3, 8, 10) Output: 2 + 3 + 5 + 6 + 3 + 8 + 10 = 37.
 
-Group operators:
+## Transformational Operators
 
-group_backfill(x, group, d, std = 4.0):
-If a certain value for a certain date and instrument is NaN, from the set of same group instruments, calculate winsorized mean of all non-NaN values over last d days.
-group_backfill(x, group, d, std = 4.0).
-If a certain value for a certain date and instrument is NaN, from the set of same group instruments, calculate winsorized mean of all non-NaN values over last d days. Winsorized mean means inputs are truncated by std * stddev where stddev is the standard deviation of inputs.
-Example:
-If d = 4 and there are 3 instruments(i1, i2, i3) in a group whose values for past 4 days are x[i1] = [4,2,5,5], x[i2] = [7,NaN,2,9], x[i3] = [NaN,-4,2,NaN] where first element is most recent, then if we want to backfill x, we will only have to backfill x[i3]’s first element because every other instrument’s first element is non-NaN.
-The non-NaN values of other groups are [4,2,5,5,7,2,9,-4,2]. Mean = 3.56, Standard deviation is 3.71 and none of the item is outside the range of 3.56 – 4 * 3.71 and 3.56 + 4 * 3.71. Hence, we don’t need to clip elements to those limits. Hence, Winsorized mean = backfilled value = 3.56.
-For three instruments, group_backfill(x, group, d, std = 4.0) = [4,7,3.56].
+1. `bucket(rank(x), range="0, 1, 0.1" or buckets = "2,5,6,7,10")`
+    - **Scope:** Combo, Regular
+    - **Description:** Convert float values into indexes for user-specified buckets. Bucket is useful for creating group values, which can be passed to GROUP as input.
+    - **Manual:** Convert float values into indexes for user-specified buckets. Bucket is useful for creating group values, which can be passed to group operators as input.
+        - If buckets are specified as "num_1, num_2, …, num_N", it is converted into brackets consisting of [(num_1, num_2, idx_1), (num_2, num_3, idx_2), ..., (num_N-1, num_N, idx_N-1)].
+            - Thus with buckets="2, 5, 6, 7, 10", the vector "-1, 3, 6, 8, 12" becomes "0, 1, 2, 4, 5".
+        - If range if specified as "start, end, step", it is converted into brackets consisting of [(start, start+step, idx_1), (start+step, start+2 * step, idx_2), ..., (start+N * step, end, idx_N)].
+            - Thus with range="0.1, 1, 0.1", the vector "0.05, 0.5, 0.9" becomes "0, 4, 8".
+        - Note that two hidden buckets corresponding to (-inf, start] and [end, +inf) are added by default. Use the **skipBegin**, **skipEnd** parameters to remove these buckets. Use **skipBoth** to set both skipEnd and skipBegin to true.
+        - If you want to assign all NAN values into a separate group of their own, use **NANGroup**. The index value will be one after the last bucket.
+        - **Example:**
+            - my_group = bucket(rank(volume), range="0.1,1,0.1");
+            - group_neutralize(sales/assets, my_group).
+            - my_group = bucket(rank(volume), buckets ="0.2,0.5,0.7", skipBoth=True, NANGroup=True);
+            - group_neutralize(sales/assets, my_group).
 
-group_cartesian_product(g1, g2):
-Merge two groups into one group. If originally there are len_1 and len_2 group indices in g1 and g2, there will be len_1 * len_2 indices in the new group.
+2 . `generate_stats(alpha)`
+    - **Scope:** Combo
+    - **Description:** The generate_stats() operator calculates Alpha statistics for each day in the IS period. It takes an input of selected Alphas with shape = (A x D x I). It outputs daily statistics for each Alpha with shape = (S x D x A), where S is the number of statistics calculated.
 
-group_max(x, group):
-Maximum of x for all instruments in the same group.
+3. `trade_when(x, y, z)`
+    - **Scope:** Combo, Regular
+    - **Description:** Used in order to change Alpha values only under a specified condition and to hold Alpha values in other cases. It also allows to close Alpha positions (assign NaN values) under a specified condition.
+    - **Manual:** This operator can be used to change Alpha values only under a specified condition and to retain Alpha values in other cases. It also allows for closing Alpha positions (assigning NaN values) under a specified condition.
+        - Trade_When (x=triggerTradeExp, y=AlphaExp, z=triggerExitExp).
+            - If triggerExitExp > 0, Alpha = NaN.
+            - Else if triggerTradeExp > 0, Alpha = AlphaExp;
+            - else, Alpha = previousAlpha.
+        - **Example:**
+            - Trade_When (volume >= ts_sum(volume,5)/5, rank(-returns), -1).
+                - If (volume >= ts_sum(volume,5)/5), Alpha = rank(-returns);
+                - else trade previous Alpha;
+                - exit condition is always false.
+            - Trade_When (volume >= ts_sum(volume,5)/5, rank(-returns), abs(returns) > 0.1).
+                - If abs(returns) > 0.1, Alpha = nan;
+                - else if volume >= ts_sum(volume,5)/5, Alpha = rank(-returns);
+                - else trade previous Alpha.
+        - **Tips:** This operator may help reduce correlation and reduce turnover.
 
-group_mean(x, weight, group):
-All elements in group equals to the mean.
-group_mean(x, group) operator can be used to calculate harmonic mean of datafields. Harmonic mean gives equal weight to each value in terms of their reciprocal contribution and is considered a better method for calculating average for fundamental ratios and factors. For example, Harmonic mean of P/E ratio (price-to-earnings) for an industry can be calculated as:
-1 /(group_mean(eps/close,1, industry)).
+## Group operators
 
-group_min(x, group):
-All elements in group equals to the min value of the group.
+1. `combo_a(alpha, nlength = 250, mode = 'algo1')`
+    - **Scope:** Combo
+    - **Description:** Combines multiple alpha signals into a single weighted output by balancing each alpha's historical return with its variability over the most recent nlength days. The parameter mode selects one of the several weighted approaches (algo1, algo2, algo3), each of which handles the tradeoff between performance and stability differently.
 
-group_neutralize(x, group):
-Neutralizes Alpha against groups. These groups can be subindustry, industry, sector, country or a constant.
-group_neutralize(x, group).
-Neutralize alpha against groups. Difference between normalize and group_neutralize is in normalize, every element is subtracted by mean of all values of all instruments on that day whereas in group_neutralize, element is subtracted by mean of all values of the group of instruments that it belongs on that day.
-This operator may help reduce correlation, depending on the neutralization used.
-Example:
-If values of field x on a certain date for 10 instruments is [3,2,6,5,8,9,1,4,8,0] and first 5 instruments belong to one group, last 5 belong to other, then mean of first group = (3+2+6+5+8)/5 = 4.8 and mean of second group = (9+1+4+8+0)/5 = 4.4. Subtracting means from instruments of respective groups gives [3-4.8, 2-4.8, 6-4.8, 5-4.8, 8-4.8, 9-4.4, 1-4.4, 4-4.4, 8-4.4, 0-4.4] = [-1.8, -2.8, 1.2, 0.2, 3.2, 4.6, -3.4, -0.4, 3.6, -4.4].
+2. `group_backfill(x, group, d, std = 4.0)`
+    - **Scope:** Combo, Regular
+    - **Description:** If a certain value for a certain date and instrument is NaN, from the set of same group instruments, calculate winsorized mean of all non-NaN values over last d days.
+    - **Manual:** If a certain value for a certain date and instrument is NaN, from the set of same group instruments, calculate winsorized mean of all non-NaN values over last d days. Winsorized mean means inputs are truncated by std * stddev where stddev is the standard deviation of inputs.
+        - **Example:**
+            - If d = 4 and there are 3 instruments(i1, i2, i3) in a group whose values for past 4 days are x[i1] = [4,2,5,5], x[i2] = [7,NaN,2,9], x[i3] = [NaN,-4,2,NaN] where first element is most recent, then if we want to backfill x, we will only have to backfill x[i3]’s first element because every other instrument’s first element is non-NaN.
+            - The non-NaN values of other groups are [4,2,5,5,7,2,9,-4,2]. Mean = 3.56, Standard deviation is 3.71 and none of the item is outside the range of 3.56 – 4 * 3.71 and 3.56 + 4 * 3.71. Hence, we don’t need to clip elements to those limits. Hence, Winsorized mean = backfilled value = 3.56.
+            - For three instruments, group_backfill(x, group, d, std = 4.0) = [4,7,3.56].
 
-group_rank(x, group):
-Each elements in a group is assigned the corresponding rank in this group.
-group_rank(x, group).
-Group operators are a type of cross-sectional operator that compares stocks at a finer level, where the cross-sectional operation is applied within each group, rather than across the entire market. The group_rank operator allocates the stocks to their specified group, then within each group, it ranks the stocks based on their input value for data field x and returns an equally distributed number between 0.0 and 1.0.
-This operator may help reduce both outliers and drawdown while reducing correlation.
-Example: group_rank(x, subindustry).
-The stocks are first grouped into their respective subindustry.
-Within each subindustry, the stocks within that subindustry are ranked based on their input value for data field x and assigned an equally distributed number between 0.0 and 1.0.
-Input: Value of 3 instruments of Group A: (100, 0, 50).
-Output: (1, 0, 0.5).
+3. `group_cartesian_product(g1, g2)`
+    - **Scope:** Combo, Regular
+    - **Description:** Merge two groups into one group. If originally there are len_1 and len_2 group indices in g1 and g2, there will be len_1 * len_2 indices in the new group.
 
-group_scale(x, group):
-Normalizes the values in a group to be between 0 and 1. (x - groupmin) / (groupmax - groupmin).
+4. `group_max(x, group)`
+    - **Scope:** Combo, Regular
+    - **Description:** Maximum of x for all instruments in the same group.
 
-group_zscore(x, group):
-Calculates group Z-score - numerical measurement that describes a value's relationship to the mean of a group of values. Z-score is measured in terms of standard deviations from the mean. zscore = (data - mean) / stddev of x for each instrument within its group. Input: Value of 5 instruments of Group A: (100, 0, 50, 60, 25) Output: (1.57, -1.39, 0.09, 0.39, -0.65).
+5. `group_mean(x, weight, group)`
+    - **Scope:** Combo, Regular
+    - **Description:** All elements in group equals to the mean.
+    - **Manual:** group_mean(x, group) operator can be used to calculate harmonic mean of datafields. Harmonic mean gives equal weight to each value in terms of their reciprocal contribution and is considered a better method for calculating average for fundamental ratios and factors. 
+        - **Example:** Harmonic mean of P/E ratio (price-to-earnings) for an industry can be calculated as:
+            - 1 /(group_mean(eps/close,1, industry)).
+
+6. `group_min(x, group)`
+    - **Scope:** Combo, Regular
+    - **Description:** All elements in group equals to the min value of the group.
+
+7. `group_neutralize(x, group)`
+    - **Scope:** Combo, Regular
+    - **Description:** Neutralizes Alpha against groups. These groups can be subindustry, industry, sector, country or a constant.
+    - **Manual:** Neutralize alpha against groups. Difference between normalize and group_neutralize is in normalize, every element is subtracted by mean of all values of all instruments on that day whereas in group_neutralize, element is subtracted by mean of all values of the group of instruments that it belongs on that day.
+        - **Example:**
+            - If values of field x on a certain date for 10 instruments is [3,2,6,5,8,9,1,4,8,0] and first 5 instruments belong to one group, last 5 belong to other, then mean of first group = (3+2+6+5+8)/5 = 4.8 and mean of second group = (9+1+4+8+0)/5 = 4.4. Subtracting means from instruments of respective groups gives [3-4.8, 2-4.8, 6-4.8, 5-4.8, 8-4.8, 9-4.4, 1-4.4, 4-4.4, 8-4.4, 0-4.4] = [-1.8, -2.8, 1.2, 0.2, 3.2, 4.6, -3.4, -0.4, 3.6, -4.4].
+        - **Tips:** This operator may help reduce correlation, depending on the neutralization used.
+
+8. `group_rank(x, group)`
+    - **Scope:** Combo, Regular
+    - **Description:** Each elements in a group is assigned the corresponding rank in this group.
+    - **Manual:** Group operators are a type of cross-sectional operator that compares stocks at a finer level, where the cross-sectional operation is applied within each group, rather than across the entire market. The group_rank operator allocates the stocks to their specified group, then within each group, it ranks the stocks based on their input value for data field x and returns an equally distributed number between 0.0 and 1.0.
+        - **Example:** group_rank(x, subindustry).
+            - The stocks are first grouped into their respective subindustry.
+            - Within each subindustry, the stocks within that subindustry are ranked based on their input value for data field x and assigned an equally distributed number between 0.0 and 1.0.
+            - Input: Value of 3 instruments of Group A: (100, 0, 50).
+            - Output: (1, 0, 0.5).
+        - **Tips:** This operator may help reduce both outliers and drawdown while reducing correlation.   
+
+9. `group_scale(x, group)`
+    - **Scope:** Combo, Regular
+    - **Description:** Normalizes the values in a group to be between 0 and 1. (x - groupmin) / (groupmax - groupmin).
+
+
+10. `group_zscore(x, group)`
+    - **Scope:** Combo, Regular
+    - **Description:** Calculates group Z-score - numerical measurement that describes a value's relationship to the mean of a group of values. Z-score is measured in terms of standard deviations from the mean. zscore = (data - mean) / stddev of x for each instrument within its group. Input: Value of 5 instruments of Group A: (100, 0, 50, 60, 25) Output: (1.57, -1.39, 0.09, 0.39, -0.65).

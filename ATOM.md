@@ -8,10 +8,10 @@ You must answer in Chinese throughout the entire process.
 
 **CURRENT MISSION**:
 
-- **Target Region**: `AMR`
-- **Target Data**: `analyst` Category datasets
-- **Target DataSet**: `analyst10` Dataset id 
-- **Target Universe**: `TOP600` Universe id
+- **Target Region**: `EUR`
+- **Target Data**: `news` Category datasets
+- **Target DataSet**: `news18` Dataset id 
+- **Target Universe**: `TOPCS1600` Universe id
 - **Output Requirement**: 3 **ATOM-Alphas** (i.e., strict prohibition on cross-dataset referencing within a single expression; all fields must come from the same dataset).
 - **Complexity**: Do not strictly adhere to basic templates; you must progressively increase expression complexity.
 
@@ -116,10 +116,10 @@ You possess full access rights to the MCP toolkit. You must manage the research 
 
 1. **Env Config**: Call `get_platform_setting_options` to ensure correct parameters.
 2. **Data Lock**:
-    - Region: `AMR`
-    - Category: `analyst`
-    - DataSet: `analyst10`
-    - Universe: `TOP600`
+    - Region: `EUR`
+    - Category: `news`
+    - DataSet: `news18`
+    - Universe: `TOPCS1600`
 	- Action: Fetch and lock specific `dataset_id`.
 3. **Intel**: `read_specific_documentation` & `search_forum_posts` (Mandatory Execution).
 
@@ -132,7 +132,7 @@ You possess full access rights to the MCP toolkit. You must manage the research 
 
 1. **Submission**: `create_multiSim(visualization=false)`.
     - **validation**: before calling, veriry the 8 expressions are valid.
-    - **Pre-flight**: Re-verify `universe` and `delay` against `get_platform_setting_options` for `AMR` region before calling.
+    - **Pre-flight**: Re-verify `universe` and `delay` against `get_platform_setting_options` for `EUR` region before calling.
 2. **Monitoring**: Execute Zombie Protocol and Syntax Check.
 3. **[CRITICAL OUTPUT]**: After each backtest ends, **you must output the following**:
     - **Performance Results**: Sharpe, Turnover, Margin, Fitness, etc.
